@@ -1,0 +1,232 @@
+﻿@page "/manage_books"
+@using LibraryManagementSystem.Services
+@using LibraryManagementSystem.Models
+@rendermode InteractiveServer
+@inject LibraryService LibSvc
+
+<PageTitle>Manage Books</PageTitle>
+
+<h1>Manage Books</h1>
+
+<button class="btn btn-primary" @onclick="AddBook">Add Book</button>
+<button class="btn btn-primary" @onclick="EditBook">Edit Book</button>
+<button class="btn btn-primary" @onclick="DeleteBook">Delete Book</button>
+<button class="btn btn-primary" @onclick="() => ListBooks(0)" >List Books</button>
+
+<div id="form_content_area" style="margin:20px;">
+    <div id="add_book_form" style="display: @add_display_state;">
+        <form method="post" @onsubmit="add_book_submit" @formname="add-book-form">
+        <div class="form-group">
+            <label for "Title">Enter Book Title</label>
+            <input name="Title" @bind="title" class="form-control" placeholder="Title" style="width:700px;">
+        </div>
+        <div class="form-group">
+            <label for "Author">Enter Book Author</label>
+            <input name="Author" @bind="author" class="form-control" placeholder="Author" style="width:150px;">
+        </div>
+        <div class="form-group">
+            <label for "ISBN">Enter Book ISBN</label>
+            <input name="ISBN" @bind="isbn" class="form-control" placeholder="ISBN" style="width:100px;">
+        </div>
+        
+        <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="edit_book_form" style="display: @edit_display_state;">
+        <form method="post" @onsubmit="edit_book_submit" @formname="edit-book-form">
+        <div class="form-group">
+            <label for "Id">Enter Book Id</label>
+            <input type="number" name="Id" @bind="id" class="form-control" placeholder="Id" style="width:700px;">
+        </div>
+        <div class="form-group">
+            <label for "Title">Enter Book Title</label>
+            <input name="Title" @bind="title" class="form-control" placeholder="Title" style="width:700px;">
+        </div>
+        <div class="form-group">
+            <label for "Author">Enter Book Author</label>
+            <input name="Author" @bind="author" class="form-control" placeholder="Author" style="width:150px;">
+        </div>
+        <div class="form-group">
+            <label for "ISBN">Enter Book ISBN</label>
+            <input name="ISBN" @bind="isbn" class="form-control" placeholder="ISBN" style="width:100px;">
+        </div>
+        
+        <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="delete_book_form" style="display: @delete_display_state;">
+                <form method="post" @onsubmit="delete_book_submit" @formname="delete-book-form">
+        <div class="form-group">
+            <label for "Id">Enter Book Id</label>
+            <input name="Id" type="number" @bind="id" class="form-control" placeholder="Id" style="width:700px;">
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<div id="list_content_area" style="margin: 20px;">
+@if (show_book_list == true){
+    @if(@books != null){
+        <div style="height:800px; overflow-y:scroll;" tabindex="-1">
+            <table style="table-layout: fixed; width: 100%">
+                <thead class="bg-light sticky-top">
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                    </tr>
+                </thead>
+            <Virtualize Items="@books" ItemSize="150">
+            <tr>
+                <td class="id">
+                    @context.Id
+                </td>
+                <td class="title">
+                    @context.Title
+                </td>
+                <td>
+                    @context.Author
+                </td>
+                <td>
+                    @context.ISBN
+                </td>
+            </tr>
+            </Virtualize>
+            </table>
+        </div>
+    } else {
+        <p>No books found</p>
+    }
+}
+</div>
+
+@code {
+
+    List<Book> ?books;
+    bool show_book_list = false;
+    bool show_add_form = false;
+    bool show_edit_form = false;
+    bool show_delete_form = false;
+    string add_display_state = "none";
+    string edit_display_state = "none";
+    string delete_display_state = "none";
+
+    private string? title;
+    private string? author;
+    private string? isbn;
+    private int id;
+    
+
+    private void ListBooks(int show = 0)
+    {
+        if (show == 0){
+            show_book_list = !show_book_list;
+        } else {
+            show_book_list = true;
+        }
+        
+        if (show_book_list == true) {
+            books = LibSvc.ReadBooks();
+        }
+    }
+
+    private void AddBook()
+    {
+        show_add_form = !show_add_form;
+        FormDisplayManagement("Add");
+    }
+
+    private void EditBook(){
+        show_edit_form = !show_edit_form;
+        FormDisplayManagement("Edit");
+    }
+
+    private void DeleteBook()
+    {
+        show_delete_form = !show_delete_form;
+        FormDisplayManagement("Delete");
+    }
+
+    private void FormDisplayManagement(string FormName){
+        switch (FormName)
+        {
+            case "Add":
+                add_display_state = "block";
+                edit_display_state = "none";
+                delete_display_state = "none";
+                break;
+            case "Edit":
+                add_display_state = "none";
+                edit_display_state = "block";
+                delete_display_state = "none";
+                break;
+            case "Delete":
+                add_display_state = "none";
+                edit_display_state = "none";
+                delete_display_state = "block";
+                break;
+        }
+
+    }
+
+    private void add_book_submit(){
+        
+        LibSvc.AddBook(new Book{
+            Title = title,
+            Author = author,
+            ISBN = isbn,
+        });
+
+        clear_form();
+        ListBooks(1);
+    }
+
+    private void edit_book_submit(){
+        
+        LibSvc.EditBook(new Book{
+            Id = id,
+            Title = title,
+            Author = author,
+            ISBN = isbn
+        });
+        
+        clear_form();
+        ListBooks(1);
+    }
+
+    private void delete_book_submit(){
+        LibSvc.DeleteBook(id);
+        clear_form();
+        ListBooks(1);
+    }
+
+    private void clear_form(){
+        title = "";
+        author = "";
+        isbn = "";
+        id = 0;
+    }
+
+}
+
+<style>
+    td .title
+    {
+        word-wrap: break-word;
+        align-content: center;
+    }z
+
+    td .id
+    { 
+        width: 25px; 
+    }
+
+    tr:nth-child(even)
+    {
+        background-color: lightblue;
+    }
+</style>

@@ -1,0 +1,200 @@
+﻿@page "/library_borrow_return"
+@using LibraryManagementSystem.Services
+@using LibraryManagementSystem.Models
+@rendermode InteractiveServer
+@inject LibraryService LibSvc
+
+<h1>Borrow and Return Books</h1>
+
+<button class="btn btn-primary" @onclick="BorrowBook">Borrow Book</button>
+<button class="btn btn-primary" @onclick="ReturnBook">Return Book</button>
+<button class="btn btn-primary" @onclick="() => ListBorrowedBooks(0)">List Borrowed Books</button>
+
+<div id="form_content_area" style="margin:20px;">
+    <div id="borrow_book_form" style="display: @borrow_display_state;">
+        <h3>Borrow Book</h3>
+        <form method="post" @onsubmit="borrow_book_submit" @formname="borrow-book-form">
+            <div class="form-group">
+                <label for "book_id">Enter Book Id</label>
+                <input name="book_id" @bind="book_id" class="form-control" placeholder="Book ID" style="width:700px;">
+            </div>
+            <div class="form-group">
+                <label for "user_id">Enter User Id</label>
+                <input name="user_id" @bind="user_id" class="form-control" placeholder="User ID" style="width:150px;">
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="return_book_form" style="display: @return_display_state;">
+        <h3>Return Book</h3>
+        <form method="post" @onsubmit="return_book_submit" @formname="return-book-form">
+            <div class="form-group">
+                <label for "book_id">Enter Book Id</label>
+                <input name="book_id" @bind="book_id" class="form-control" placeholder="Book ID" style="width:700px;">
+            </div>
+            <div class="form-group">
+                <label for "user_id">Enter User Id</label>
+                <input name="user_id" @bind="user_id" class="form-control" placeholder="User ID" style="width:150px;">
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+
+</div>
+
+<div id="list_content_area" style="margin: 20px;">
+    @if (show_book_list == true)
+    {   
+        @if (borrowed_books != null && borrowed_books.Any())
+        {
+            <div style="height:800px; overflow-y:scroll;" tabindex="-1">
+                <table style="table-layout: fixed; width: 100%">
+                    <thead class="bg-light sticky-top">
+                        <tr>
+                            <th>User ID</th>
+                            <th>Borrowed Books</th>
+                        </tr>
+                    </thead>
+                    <Virtualize Items="@borrowed_books.ToList()" ItemSize="150">
+                        <tr>
+                            <td class="user_id">
+                                @context.Key
+                            </td>
+                            <td class="title">
+                                @foreach (var book in @context.Value)
+                                {
+                                    <span>@book.Title (ID: @book.Id), </span>
+                                }
+                            </td>
+                        </tr>
+                    </Virtualize>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>No books found</p>
+        }
+    }
+</div>
+
+
+@code {
+
+    List<Book>? books;
+    Dictionary<int,List<Book>>? borrowed_books;
+    bool show_book_list = false;
+    bool show_add_form = false;
+    bool show_edit_form = false;
+    bool show_delete_form = false;
+    string borrow_display_state = "none";
+    string return_display_state = "none";
+
+    private int book_id;
+    private int user_id;
+
+
+    private void ListBorrowedBooks(int show = 0)
+    {
+        if (show == 0)
+        {
+            show_book_list = !show_book_list;
+        }
+        else
+        {
+            show_book_list = true;
+        }
+
+        if (show_book_list == true)
+        {
+            borrowed_books = LibSvc.GetBorrowedBooks();
+        }
+    }
+
+    private void BorrowBook()
+    {
+        show_add_form = !show_add_form;
+        FormDisplayManagement("Borrow");
+    }
+
+    private void ReturnBook()
+    {
+        show_edit_form = !show_edit_form;
+        FormDisplayManagement("Return");
+    }
+
+    private void FormDisplayManagement(string FormName)
+    {
+        switch (FormName)
+        {
+            case "Borrow":
+                borrow_display_state = "block";
+                return_display_state = "none";
+                break;
+            case "Return":
+                borrow_display_state = "none";
+                return_display_state = "block";
+                break;
+        }
+
+    }
+
+    private void borrow_book_submit()
+    {
+
+        LibSvc.BorrowBook(user_id, book_id);
+
+        clear_form();
+        ListBorrowedBooks(1);
+    }
+
+    private void return_book_submit()
+    {
+
+        LibSvc.ReturnBook(user_id, book_id);
+
+        clear_form();
+        ListBorrowedBooks(1);
+    }
+
+    private void clear_form()
+    {
+        book_id = 0;
+        user_id = 0;
+    }
+
+    private void ListBooks(int show = 0)
+    {
+        if (show == 0)
+        {
+            show_book_list = !show_book_list;
+        }
+        else
+        {
+            show_book_list = true;
+        }
+
+        if (show_book_list == true)
+        {
+            books = LibSvc.ReadBooks();
+        }
+    }
+}
+
+<style>
+    td .title {
+        word-wrap: break-word;
+        align-content: center;
+    }
+
+    z
+
+    td .id {
+        width: 25px;
+    }
+
+    tr:nth-child(even) {
+        background-color: lightblue;
+    }
+</style>

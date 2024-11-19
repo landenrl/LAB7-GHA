@@ -1,0 +1,230 @@
+﻿@page "/manage_users"
+@using LibraryManagementSystem.Services
+@using LibraryManagementSystem.Models
+@rendermode InteractiveServer
+@inject LibraryService LibSvc
+
+<PageTitle>Manage Users</PageTitle>
+
+<h1>Manage Users</h1>
+
+<button class="btn btn-primary" @onclick="AddUser">Add User</button>
+<button class="btn btn-primary" @onclick="EditUser">Edit User</button>
+<button class="btn btn-primary" @onclick="DeleteUser">Delete User</button>
+<button class="btn btn-primary" @onclick="() => ListUsers(0)">List Users</button>
+
+<div id="form_content_area" style="margin:20px;">
+    <div id="add_user_form" style="display: @add_display_state;">
+        <form method="post" @onsubmit="add_user_submit" @formname="add-user-form">
+            <div class="form-group">
+                <label for="Name">Enter User Name</label>
+                <input name="Name" @bind="name" class="form-control" placeholder="Name" style="width:700px;">
+            </div>
+            <div class="form-group">
+                <label for="Email">Enter User Email</label>
+                <input name="Email" @bind="email" class="form-control" placeholder="Email" style="width:700px;">
+            </div>
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="edit_user_form" style="display: @edit_display_state;">
+        <form method="post" @onsubmit="edit_user_submit" @formname="edit-user-form">
+            <div class="form-group">
+                <label for="Id">Enter User Id</label>
+                <input type="number" name="Id" @bind="id" class="form-control" placeholder="Id" style="width:700px;">
+            </div>
+            <div class="form-group">
+                <label for="Name">Enter User Name</label>
+                <input name="Name" @bind="name" class="form-control" placeholder="Name" style="width:700px;">
+            </div>
+            <div class="form-group">
+                <label for="Email">Enter User Email</label>
+                <input name="Email" @bind="email" class="form-control" placeholder="Email" style="width:700px;">
+            </div>
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="delete_user_form" style="display: @delete_display_state;">
+        <form method="post" @onsubmit="delete_user_submit" @formname="delete-user-form">
+            <div class="form-group">
+                <label for="Id">Enter User Id</label>
+                <input name="Id" type="number" @bind="id" class="form-control" placeholder="Id" style="width:700px;">
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<div id="list_content_area" style="margin: 20px;">
+    @if (show_user_list == true)
+    {
+        @if (@users != null)
+        {
+            <div style="height:800px; overflow-y:scroll;" tabindex="-1">
+                <table style="table-layout: fixed; width: 100%">
+                    <thead class="bg-light sticky-top">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <Virtualize Items="@users" ItemSize="150">
+                        <tr>
+                            <td class="id">
+                                @context.Id
+                            </td>
+                            <td class="name">
+                                @context.Name
+                            </td>
+                            <td>
+                                @context.Email
+                            </td>
+                        </tr>
+                    </Virtualize>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>No users found</p>
+        }
+    }
+</div>
+
+@code {
+
+    List<User>? users;
+    bool show_user_list = false;
+    bool show_add_form = false;
+    bool show_edit_form = false;
+    bool show_delete_form = false;
+    string add_display_state = "none";
+    string edit_display_state = "none";
+    string delete_display_state = "none";
+
+    private string? name;
+    private string? email;
+    private int id;
+
+
+    private void ListUsers(int show = 0)
+    {
+        if (show == 0)
+        {
+            show_user_list = !show_user_list;
+        }
+        else
+        {
+            show_user_list = true;
+        }
+
+        if (show_user_list == true)
+        {
+            users = LibSvc.ReadUsers();
+        }
+    }
+
+    private void AddUser()
+    {
+        show_add_form = !show_add_form;
+        FormDisplayManagement("Add");
+    }
+
+    private void EditUser()
+    {
+        show_edit_form = !show_edit_form;
+        FormDisplayManagement("Edit");
+    }
+
+    private void DeleteUser()
+    {
+        show_delete_form = !show_delete_form;
+        FormDisplayManagement("Delete");
+    }
+
+    private void FormDisplayManagement(string FormName)
+    {
+        switch (FormName)
+        {
+            case "Add":
+                add_display_state = "block";
+                edit_display_state = "none";
+                delete_display_state = "none";
+                break;
+            case "Edit":
+                add_display_state = "none";
+                edit_display_state = "block";
+                delete_display_state = "none";
+                break;
+            case "Delete":
+                add_display_state = "none";
+                edit_display_state = "none";
+                delete_display_state = "block";
+                break;
+        }
+
+    }
+
+    private void add_user_submit()
+    {
+
+        LibSvc.AddUser(new User
+            {
+                Name = name,
+                Email = email,
+            });
+
+        clear_form();
+        ListUsers(1);
+    }
+
+    private void edit_user_submit()
+    {
+
+        LibSvc.EditUser(new User
+            {
+                Id = id,
+                Name = name,
+                Email = email
+            });
+
+        clear_form();
+        ListUsers(1);
+    }
+
+    private void delete_user_submit()
+    {
+        LibSvc.DeleteUser(id);
+        clear_form();
+        ListUsers(1);
+    }
+
+    private void clear_form()
+    {
+        name = "";
+        email = "";
+        id = 0;
+    }
+
+}
+<style>
+    td .title {
+        word-wrap: break-word;
+        align-content: center;
+    }
+
+    z
+
+    td .id {
+        width: 25px;
+    }
+
+    tr:nth-child(even) {
+        background-color: lightblue;
+    }
+</style>

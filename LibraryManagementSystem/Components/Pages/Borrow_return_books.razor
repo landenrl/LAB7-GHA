@@ -1,0 +1,140 @@
+﻿@* @page "/Borrow_return_books"
+@using LibraryManagementSystem.Services
+@using LibraryManagementSystem.Models
+@rendermode InteractiveServer
+@inject LibraryService LibSvc
+
+<h1>Borrow and Return Books</h1>
+
+<!-- Borrow Book Section -->
+<h3>Borrow Book</h3>
+<div class="form-group">
+    <label for="UserId">Select User</label>
+    <select @bind="selectedUserId" class="form-control">
+        <option value="">Select User</option>
+        @foreach (var user in users)
+        {
+            <option value="@user.Id">@user.Name</option>
+        }
+    </select>
+</div>
+<div class="form-group">
+    <label for="BookId">Select Book</label>
+    <select @bind="selectedBookId" class="form-control">
+        <option value="">Select Book</option>
+        @foreach (var book in availableBooks)
+        {
+            <option value="@book.Id">@book.Title</option>
+        }
+    </select>
+</div>
+<button class="btn btn-primary" @onclick="BorrowBook">Borrow Book</button>
+
+<!-- Return Book Section -->
+<h3>Return Book</h3>
+<div class="form-group">
+    <label for="ReturnUserId">Select User</label>
+    <select @bind="returnUserId" class="form-control">
+        <option value="">Select User</option>
+        @foreach (var user in users)
+        {
+            <option value="@user.Id">@user.Name</option>
+        }
+    </select>
+</div>
+<div class="form-group" style="display:@(borrowedBooks?.Any() == true ? "block" : "none")">
+    <label for="ReturnBookId">Select Book to Return</label>
+    <select @bind="returnBookId" class="form-control">
+        <option value="">Select Book</option>
+        @foreach (var book in borrowedBooks)
+        {
+            <option value="@book.Id">@book.Title</option>
+        }
+    </select>
+</div>
+<button class="btn btn-primary" @onclick="ReturnBook">Return Book</button>
+
+@code {
+    private List<User> users;
+    private List<Book> availableBooks;
+    private List<Book> borrowedBooks;
+    private int selectedUserId;
+    private int selectedBookId;
+    private int returnUserId;
+    private int returnBookId;
+
+    protected override void OnInitialized()
+    {
+        users = LibSvc.ReadUsers();
+        availableBooks = LibSvc.ReadBooks();
+    }
+
+    private void BorrowBook()
+    {
+        if (selectedUserId > 0 && selectedBookId > 0)
+        {
+            bool success = LibSvc.BorrowBook(selectedUserId, selectedBookId);
+            if (success)
+            {
+                LoadAvailableBooks();
+                LoadBorrowedBooks();
+                Console.WriteLine("Book borrowed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Borrowing failed. Book may not be available.");
+            }
+        }
+    }
+
+    private void LoadAvailableBooks()
+    {
+        availableBooks = LibSvc.ReadBooks();
+    }
+
+    private void LoadBorrowedBooks()
+    {
+        if (returnUserId > 0)
+        {
+            borrowedBooks = LibSvc.GetBorrowedBooks();
+        }
+    }
+
+    private void ReturnBook()
+    {
+        if (returnUserId > 0 && returnBookId > 0)
+        {
+            bool success = LibSvc.ReturnBook(returnUserId, returnBookId);
+            if (success)
+            {
+                LoadAvailableBooks();
+                LoadBorrowedBooks();
+                Console.WriteLine("Book returned successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Returning failed. Please try again.");
+            }
+        }
+    }
+
+    private void OnReturnUserChanged()
+    {
+        LoadBorrowedBooks();
+    }
+
+    private int ReturnUserId
+    {
+        get => returnUserId;
+        set
+        {
+            if (returnUserId != value)
+            {
+                returnUserId = value;
+                LoadBorrowedBooks();
+            }
+        }
+    }
+}
+
+ *@

@@ -1,0 +1,75 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = LibraryManagementSystem
+build_property.RootNamespace = LibraryManagementSystem
+build_property.ProjectDir = /Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/App.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BcHAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Pages/Borrow_return_books.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Cb3Jyb3dfcmV0dXJuX2Jvb2tzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Pages/Checkout_Book.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9DaGVja291dF9Cb29rLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Pages/Error.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FcnJvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Ib21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Pages/LibraryBorrowReturn.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9MaWJyYXJ5Qm9ycm93UmV0dXJuLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Pages/List_borrowed_books.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9MaXN0X2JvcnJvd2VkX2Jvb2tzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Pages/Manage_books.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9NYW5hZ2VfYm9va3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Pages/Manage_users.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9NYW5hZ2VfdXNlcnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Pages/Return_book.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9SZXR1cm5fYm9vay5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Sb3V0ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9fSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-0dc5wt27jc
+
+[/Users/jbond/Downloads/LibraryManagementSystem/LibraryManagementSystem/Components/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-7c7v9t7pun
