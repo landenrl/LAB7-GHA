@@ -28,7 +28,8 @@ namespace TestProject1
 
             // Assert
             var books = libraryService.ReadBooks();
-            Assert.IsTrue(books.Exists(b => b.Title == "New Book" && b.Author == "New Author"), "Book was not added to the collection.");
+            //Purposely changed to fail
+            Assert.IsTrue(books.Exists(b => b.Title == "Bok" && b.Author == "New Author"), "Book was not added to the collection.");
         }
 
         [TestMethod]
